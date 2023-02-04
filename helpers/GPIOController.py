@@ -1,6 +1,7 @@
-import sys
+import time
 import random
-import unittest.mock
+import threading
+import unittest.mock # perhaps could move to this for sim management
 from logger_config import logger
 
 class GPIOController:
@@ -67,7 +68,11 @@ class GPIOController:
             self.gpio_read_callback_ref[pin].cancel()
         
     def gpio_read_callback_sim(self, pin):
-        self.pulse_count[pin] += 1
+        if pin not in self.pulse_count.keys():
+            self.pulse_count[pin] = 0
+            self.frequency[pin] = 0
+        else:
+            self.pulse_count[pin] += 1
         current_time = time.clock_gettime(time.CLOCK_MONOTONIC)
         if self.pulse_count[pin] > 1:
             self.pulse_times[pin].append(current_time - self.previous_time[pin])
@@ -77,7 +82,7 @@ class GPIOController:
         self.previous_time[pin] = current_time
         self.gpio_read_callback_sim_ref[pin] = threading.Timer(1, self.gpio_read_callback_sim, args=[ pin ])
         self.gpio_read_callback_sim_ref[pin].start()
-        logger.debug("pin=%d count=%d freq=%f" % (pin, self.pulse_count[pin], self.frequeny[pin]))
+        logger.debug("pin=%d count=%d freq=%f" % (pin, self.pulse_count[pin], self.frequency[pin]))
         
     def gpio_read_callback(self, gpio, level, tick):
         self.pulse_count[gpio] += 1
@@ -88,7 +93,7 @@ class GPIOController:
                 self.pulse_times[gpio].pop(0)
             self.frequency[gpio] = self.frequency_count / sum(self.pulse_times[gpio])
         self.previous_time[gpio] = current_time
-        logger.debug("pin=%d count=%d freq=%f" % (gpio, self.pulse_count[gpio], self.frequeny[gpio]))
+        logger.debug("pin=%d count=%d freq=%f" % (gpio, self.pulse_count[gpio], self.frequency[gpio]))
         
     def gpio_pwm(self, pin, freq, dutycycle):
         logger.debug("pin=%d dutycycle=%d" % (pin, dutycycle))

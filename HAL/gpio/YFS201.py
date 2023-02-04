@@ -21,14 +21,18 @@ from Device import Device
 
 class YFS201(Device):
 
+    pin = 0
+    
     def __init__(self):
         self.hw = GPIOController.GPIOController()
 
     def start(self):
+        self.is_active = True
         self.hw.gpio_read_callback_setup(self.pin)
 
     def stop(self):
         self.hw.gpio_read_callback_stop(self.pin)
+        self.is_active = False
         
     def get_pulses(self):
         return self.hw.pulse_count[self.pin]

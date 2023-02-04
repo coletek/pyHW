@@ -14,15 +14,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import time
 from logger_config import logger
 import GPIOController
 import Constants
 from Device import Device
 
+# TODO: move to using GPIOController
+import time
 try:
-    import spidev # move to using GPIOController
+    import spidev
 except:
     pass
     
@@ -31,6 +31,8 @@ class MAX7301ATL(Device):
     is_simulator = False
     
     def start(self):
+        self.is_active = True
+        
         try:
             self.spi = spidev.SpiDev()
             self.spi.open(0, 0)

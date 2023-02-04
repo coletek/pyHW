@@ -35,6 +35,9 @@ except:
 
 class MLX90614(Device):
 
+    bus_num = 1
+    address = 0x5a
+    
     MLX90614_RAWIR1=0x04
     MLX90614_RAWIR2=0x05
     MLX90614_TA=0x06
@@ -56,10 +59,9 @@ class MLX90614(Device):
     comm_retries = 5
     comm_sleep_amount = 0.1
 
-    def __init__(self, address=0x5a, bus_num=1):
-        self.bus_num = bus_num
-        self.address = address
-
+    def start(self):
+        self.is_active = True
+        
         try:
             self.bus = smbus.SMBus(bus=bus_num)
         except:

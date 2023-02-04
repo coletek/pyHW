@@ -26,15 +26,15 @@ import serial
 class Sabertooth(Device):
 
     address = 128
-    uart_dev = ""
+    port = "/dev/ttyS0"
     baudrate = 9600
+    uart_dev = ""
 
-    def start(self, address = 128, port = "/dev/ttyS0", baudrate = 9600):
+    def start(self):
+        self.is_active = True
         
-        self.address = address
-
         try:
-            self.uart_dev = serial.Serial(port, baudrate)
+            self.uart_dev = serial.Serial(self.port, self.baudrate)
         except:
             logger.debug("no serial - assuming simulator")
             self.is_simulator = True
@@ -42,8 +42,6 @@ class Sabertooth(Device):
         # auto set baud rate (for V1 only) - really really bad - http://webbot.org.uk/WebbotLibDocs2/44218.html
         #time.sleep(2)
         #n = self.uart_dev.write(bytes(chr(170), 'UTF-8')) 
-        
-        time.sleep(1)
 
     def motor_control_left(self, speed): # speed: -127 to 127
         if speed >= 0:

@@ -14,24 +14,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-import time
 from logger_config import logger
+import GPIOController
+import Constants
+from Device import Device
 
+# TODO: upgrade to GPIOController
+import time
 try:
-    import RPi.GPIO as GPIO # TODO move to pigpio
+    import RPi.GPIO as GPIO
 except:
     pass
 
-class AccessControl:
+class AccessControl(Device):
 
-    # dynamic variables
-
-    is_simulator = False
-    
-    # static variables
-    
     NOT_UP_OR_DOWN = -1
     DOWN = 0
     UP = 1

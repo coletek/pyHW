@@ -79,7 +79,8 @@ class LTC2497(Device):
         "MOTORS_CURRENT_SENSOR": -1,
     }
         
-    def __init__(self):        
+    def start(self):
+        self.is_active = True
 
         try:
             pigpio.exceptions = True

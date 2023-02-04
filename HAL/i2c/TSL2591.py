@@ -63,7 +63,9 @@ class TSL2591(Device):
     
     REG_LUX_DF = 408 # lux cooefficient
     
-    def __init__(self):
+    def start(self):
+        self.is_active = True
+        
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()

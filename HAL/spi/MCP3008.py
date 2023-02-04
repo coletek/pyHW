@@ -14,19 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from logger_config import logger
+import GPIOController
+import Constants
+from Device import Device
 
+# TODO: move to GPIOController
 try:
     from spidev import SpiDev
 except:
     pass
 
-class MCP3008:
+class MCP3008(Device):
 
-    is_simulator = False
-    
-    def __init__(self):
+    def start(self):
+        self.is_active = True
+        
         try:
             self.spi = SpiDev()
             self.open(0, 1)

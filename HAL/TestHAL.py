@@ -31,61 +31,24 @@ modules = {}
 
 for k, v in components.items():
     print ("Loading '%s': %s" % (k, v))
-    modules[k] = importlib.import_module(k)
+    obj_name = k.split(".")[1]
+    module = importlib.import_module(k)
+    obj = getattr(module, obj_name)
+    modules[k] = obj()
 
-# TODO
-theromocuple = modules['1-wire.MAX31850JATB'].MAX31850JATB()
-cam = modules['cam.Cam'].Cam()
-access_control = modules['gpio.AccessControl'].AccessControl()
-
-buzzer = modules['gpio.Buzzer'].Buzzer()
-buzzer.pin = 7
-buzzer.start()
-
-# TODO
-flow_sensor_oval_gear = modules['gpio.CXMSeries'].CXMSeries()
-
-fan = modules['gpio.FanDc'].FanDc()
-fan.pin = 7
-fan.start()
-
-# TODO
-matrix_display = modules['gpio.HUB75'].HUB75()
-stepper_motor = modules['gpio.StepperMotor'].StepperMotor()
-interrupt = modules['gpio.Interrupt'].Interrupt()
-flow_sensor_paddle_brass = modules['gpio.YFB7'].YFB7()
-flow_sensor_paddle_plastic = modules['gpio.YFS201'].YFS201()
-temp_sensor = modules['i2c.DS1775R'].DS1775R()
-adc_16ch_16bit_deltasigma = modules['i2c.LTC2497'].LTC2497()
-temp_sensor2 = modules['i2c.MLX90614'].MLX90614()
-light_sensor = modules['i2c.TSL2591'].TSL2591()
-lpr = modules['ip.Lpr'].Lpr()
-lpr_mobile = modules['ip.LprMobile'].LprMobile()
-radar_sensor = modules['uart.DR600'].DR600()
-gps_sensor = modules['uart.GPSNEMA'].GPSNEMA()
-inclinometer_sensor = modules['uart.RION'].RION()
-motor_controller = modules['uart.Sabertooth'].Sabertooth()
-io_expander = modules['spi.MAX7301ATL'].MAX7301ATL()
-adc_8ch_10bit_sar = modules['spi.MAX7301ATL'].MAX7301ATL()
+modules['gpio.Buzzer'].pin = 7
+modules['gpio.FanDc'].pin = 7
+    
+for k, v in modules.items():
+    print ("Starting module '%s'" % k)
+    v.start()
 
 while 1:
 
     time.sleep(1)
-    logger.info("==== STATUS ====\n"
-                "simple gpio: buzzer=%d fan=%d interrupt=%d io_expander=%d\n"
-                "flow sensors: paddle_plastic=%d paddle_brass=%d oval_gear=%d\n"
-                "motor ctrls: stepper=%d sabertooth=%d\n"
-                "temp sensors: DS1775R=%d MLX90614=%d\n"
-                "cams: V4L=%d LPR=%d LPR_MOBILE=%d\n"
-                "ADCs: LTC2497=%d MCP3008=%d\n"
-                "Other Sensors: light=%d radar=%d gps=%d inclinometer=%d" %
-                (buzzer.is_active, fan.is_active, interrupt.is_active, io_expander.is_active,
-                 flow_sensor_paddle_plastic.is_active, flow_sensor_paddle_brass.is_active, flow_sensor_oval_gear.is_active,
-                 stepper_motor.is_active, motor_controller.is_active,
-                 temp_sensor.is_active, temp_sensor2.is_active,
-                 cam.is_active, lpr.is_active, lpr_mobile.is_active,
-                 adc_16ch_16bit_deltasigma.is_active, adc_8ch_10bit_sar.is_active,
-                 light_sensor.is_active, radar_sensor.is_active, gps_sensor.is_active, inclinometer_sensor.is_active))
 
-    if fan.is_active and not buzzer.is_active:
-        fan.stop()
+    for k, v in modules.items():
+        logger.info("is_active(%s): %d" % (k, v.is_active))
+        
+    if modules['gpio.FanDc'].is_active and not modules['gpio.Buzzer'].is_active:
+        modules['gpio.Buzzer'].stop()

@@ -21,16 +21,19 @@ from Device import Device
 
 class Interrupt(Device):
 
+    pin = 0
     is_interrupt = False
 
     def __init__(self):
         self.hw = GPIOController.GPIOController()
 
     def start(self):
+        self.is_active = True
         self.hw.gpio_read_callback_setup(self.pin)
 
     def stop(self):
         self.hw.gpio_read_callback_stop(self.pin)
+        self.is_active = False
         
     def interrupt_callback(self):
         # TODO: set this if the callback was trigger - currently the callback code is targeting pulse stats

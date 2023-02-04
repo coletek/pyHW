@@ -14,24 +14,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-import time
-import random
-from PIL import Image
 from logger_config import logger
+import GPIOController
+import Constants
+from Device import Device
 
+# TODO: upgrade to GPIOController maybe...
+import time
+from PIL import Image
 try:
     from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 except:
     pass
 
-class HUB75:
+class HUB75(Device):
     
-    # dynamic variables
-    
-    is_simulator = False
-    
-    def __init__(self):
+    def start(self):
+        self.is_active = True
+        
         try:
             # Configuration for the matrix
             options = RGBMatrixOptions()

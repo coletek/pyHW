@@ -15,7 +15,6 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 import time
-import sys
 import threading
 
 from logger_config import logger
@@ -31,6 +30,7 @@ class Buzzer(Device):
         self.hw = GPIOController.GPIOController()
 
     def start(self):
+        self.is_active = True
         self.set()
         self.timer = threading.Timer(1, self.stop)
         self.timer.start()
@@ -41,6 +41,7 @@ class Buzzer(Device):
             logger.info("beep stopped")
         else:
             self.hw.gpio_pwm(self.pin, Constants.PWM_BUZZER, 0.0 * 255)
+        self.is_active = False
         
     def set(self):
         if self.hw.is_simulation:

@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
+from logger_config import logger
+import GPIOController
+import Constants
+from Device import Device
+
+# TODO: upgrade to GPIOController
 import time
 import glob
-import random
-from logger_config import logger
 
-class MAX31850JATB:
+class MAX31850JATB(Device):
 
-    
-    
     # genarates path for perticular function
     def file_path_gen(self, sensor_id):
         base_dir = '/sys/bus/w1/devices/w1_bus_master'	# commo path

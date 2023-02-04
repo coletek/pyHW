@@ -24,8 +24,8 @@ import cv2
 
 class Cam(Device):
 
-    def start(self, ch = 0):
-        
+    def start(self, ch = 0):        
+        self.is_active = True
         try:
             self.fd = cv2.VideoCapture(ch)
         except:

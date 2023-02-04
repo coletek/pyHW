@@ -31,9 +31,11 @@ class GPSNEMA(Device):
     
     message_preamble = '$'
     message_postamble = '\n'
-    
-    uart_dev = ""
+
+    port = "/dev/ttyS0"
     baudrate = 9600
+    timeout = 0.1    
+    uart_dev = ""
 
     # https://www.sparkfun.com/datasheets/GPS/NMEA%20Reference%20Manual-Rev2.1-Dec07.pdf
     
@@ -57,9 +59,11 @@ class GPSNEMA(Device):
     course_over_ground = 0.0
     speed_over_ground = 0.0
     
-    def start(self, port = "/dev/ttyS0", baudrate = 9600, timeout = 0.1):
+    def start(self):
+        self.is_active = True
+        
         try:
-            self.uart_dev = serial.Serial(port, baudrate, timeout = timeout)
+            self.uart_dev = serial.Serial(self.port, self.baudrate, timeout = self.timeout)
         except:
             logger.debug("no serial - assuming simulator")
             self.is_simulator = True

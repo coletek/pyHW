@@ -38,7 +38,9 @@ class DS1775R(Device):
     
     REG_TEMP = 0x00
     
-    def __init__(self):
+    def start(self):
+        self.is_active = True
+        
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()

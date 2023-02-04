@@ -26,15 +26,15 @@ import math
 class RION(Device):
 
     model = "LCA"
-    
-    uart_dev = ""
+    port = "/dev/ttyS0"
     baudrate = 9600
+    uart_dev = ""
 
-    def start(self, model = "LCA", port = "/dev/ttyS0", baudrate = 9600):
-        self.model = model
+    def start(self):
+        self.is_active = True
         
         try:
-            self.uart_dev = serial.Serial(port, baudrate=baudrate, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
+            self.uart_dev = serial.Serial(self.port, baudrate=self.baudrate, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE)
             #self.uart_dev = serial.Serial(port, baudrate=baudrate)
         except:
             logger.debug("no serial - assuming simulator")

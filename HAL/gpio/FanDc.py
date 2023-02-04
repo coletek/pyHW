@@ -28,10 +28,12 @@ class FanDc(Device):
         self.hw = GPIOController.GPIOController()
 
     def start(self):
+        self.is_active = True
         self.set(1)
         
     def stop(self):
         self.set(0)
+        self.is_active = False
         
     def set(self, speed):        
         self.speed = speed

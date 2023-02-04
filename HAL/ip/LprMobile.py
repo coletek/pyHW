@@ -28,26 +28,20 @@ import xml.etree.ElementTree as ET
 
 class LprMobile(Device):
 
-    ip_cam = "10.0.0.30"
-    is_connected = False
+    ip_address = "10.0.0.30"
     
-    def start(self, ip_cam):
-        self.ip_cam = ip_cam
-
-        # tmp
-        #return
-
-        response = os.system("ping -c 1 " + self.ip_cam)
+    def start(self):
+        response = os.system("ping -c 1 " + self.ip_address)
         if response == 0:
-            self.is_connected = True
+            self.is_active = True
         else:
             logger.debug("LPR Cam not connected")
             
     def get_time(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=gettime')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=gettime')
         xml = response.read()
         root = ET.fromstring(xml)
 
@@ -62,10 +56,10 @@ class LprMobile(Device):
         return timestamp
         
     def get_time_monotonic(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/setup/time?getmonotime_ms&section=time&wfilter=1')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/setup/time?getmonotime_ms&section=time&wfilter=1')
         data = response.read()
         # FINISH ME
 
@@ -74,21 +68,21 @@ class LprMobile(Device):
         return "%s-%s-%d.jpg" % (time_str, lp['plate'], int(lp['confidence']))
         
     def get_image(self, id = False):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
 
         if id:
-            response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getimage&id=' + id)
+            response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getimage&id=' + id)
             return response.read()
         else:
-            response = urllib.request.urlopen('http://' + self.ip_cam + '/capture/scapture?wfilter=0')
+            response = urllib.request.urlopen('http://' + self.ip_address + '/capture/scapture?wfilter=0')
             return response.read()
 
     def get_id_first(self):
-        if not self.is_connected:
+        if not self.is_active:
             return "none"
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
         xml = response.read()
 
         root = ET.fromstring(xml)
@@ -102,10 +96,10 @@ class LprMobile(Device):
         return "none"
             
     def get_ids(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
         xml = response.read()
         root = ET.fromstring(xml)
         
@@ -135,7 +129,7 @@ class LprMobile(Device):
         motdet_aoi = ''
         motdet_confidence = 0.0
         
-        if not self.is_connected or id == "none":
+        if not self.is_active or id == "none":
             return {
                 'timestamp' : timestamp,
                 'plate' : plate,
@@ -148,7 +142,7 @@ class LprMobile(Device):
                 'motdet_confidence': motdet_confidence
         }
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getdata&id=' + id)
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getdata&id=' + id)
         xml = response.read()
         root = ET.fromstring(xml)
 
@@ -203,20 +197,20 @@ class LprMobile(Device):
         }
 
     def trigger(self):
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/trigger/swtrigger?sendtrigger=1&wfilter=1')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/trigger/swtrigger?sendtrigger=1&wfilter=1')
         xml = response.read()
     
     def remove_id(self, id):
-        if not self.is_connected:
+        if not self.is_active:
             return
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=removebyid&id=' + id)
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=removebyid&id=' + id)
         xml = response.read()
 
     def clear_db(self):
-        if not self.is_connected:
+        if not self.is_active:
             return
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=cleardb')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=cleardb')
         xml = response.read()
 

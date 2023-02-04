@@ -51,7 +51,8 @@ class DR600(Device):
         "set CY 500\r\n"
     ]
     
-    def __init__(self):
+    def start(self):
+        self.is_active = True        
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()

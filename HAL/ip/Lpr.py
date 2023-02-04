@@ -28,24 +28,20 @@ import xml.etree.ElementTree as ET
 
 class Lpr(Device):
 
-    ip_cam = "10.61.226.21"
-    is_connected = False
-    
-    def start(self, ip_cam):
+    ip_address = "10.0.0.30"
 
-        self.ip_cam = ip_cam
-
-        response = os.system("ping -c 1 " + self.ip_cam)
+    def start(self):
+        response = os.system("ping -c 1 " + self.ip_address)
         if response == 0:
-            self.is_connected = True
+            self.is_active = True
         else:
             logger.debug("LPR Cam not connected")
             
     def get_time(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=gettime')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=gettime')
         xml = response.read()
         root = ET.fromstring(xml)
 
@@ -60,18 +56,18 @@ class Lpr(Device):
         return timestamp
         
     def get_time_monotonic(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/setup/time?getmonotime_ms&section=time&wfilter=1')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/setup/time?getmonotime_ms&section=time&wfilter=1')
         data = response.read()
         # FINISH ME
         
     def save_image(self, id):
-        if not self.is_connected:
+        if not self.is_active:
             return
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getimage&id=' + id)
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getimage&id=' + id)
         data = response.read()
 
         if str(data).find("No such file or directory") > 0:
@@ -89,17 +85,17 @@ class Lpr(Device):
             output.close()
 
     def remove_lp(self, id):
-        if not self.is_connected:
+        if not self.is_active:
             return
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=removebyid&id=' + id)
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=removebyid&id=' + id)
         xml = response.read()
 
     def clear_db(self):
-        if not self.is_connected:
+        if not self.is_active:
             return
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=cleardb')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=cleardb')
         xml = response.read()
 
     def get_lp(self, id):
@@ -109,7 +105,7 @@ class Lpr(Device):
         lpr_confidence = 0.0
         vr_confidence = 0.0
         
-        if not self.is_connected:
+        if not self.is_active:
             return { 'timestamp' : timestamp, 'plate' : plate, \
                      'lpr_confidence' : lpr_confidence, 'vr_confidence': vr_confidence }
 
@@ -117,7 +113,7 @@ class Lpr(Device):
             return { 'timestamp' : timestamp, 'plate' : plate, \
                      'lpr_confidence' : lpr_confidence, 'vr_confidence': vr_confidence }
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getdata&id=' + id)
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getdata&id=' + id)
         xml = response.read()
         root = ET.fromstring(xml)
 
@@ -147,10 +143,10 @@ class Lpr(Device):
                  'lpr_confidence' : lpr_confidence, 'vr_confidence': vr_confidence }
 
     def get_id_first(self):
-        if not self.is_connected:
+        if not self.is_active:
             return "none"
 
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
         xml = response.read()
 
         if str(xml).find("SQL error") > 0:
@@ -163,10 +159,10 @@ class Lpr(Device):
                 return child.attrib['value']
 
     def get_lp_list(self):
-        if not self.is_connected:
+        if not self.is_active:
             return 0
         
-        response = urllib.request.urlopen('http://' + self.ip_cam + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
+        response = urllib.request.urlopen('http://' + self.ip_address + '/lpr/cff?cmd=getresultlist&select=WHERE%20ID%20>%200')
         xml = response.read()
         root = ET.fromstring(xml)
         
