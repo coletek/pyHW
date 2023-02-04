@@ -23,6 +23,7 @@ class FanDc(Device):
 
     speed = 0
     pin = 0
+    freq = Constants.FREQ_MOTOR
 
     def __init__(self):
         self.hw = GPIOController.GPIOController()
@@ -41,4 +42,4 @@ class FanDc(Device):
         if self.hw.is_simulation:
             logger.info("speed=%f" % speed)
         else:
-            self.hw.gpio_pwm(self.pin, Constants.FREQ_MOTOR, self.speed * 255)
+            self.hw.gpio_pwm(self.pin, self.freq, self.speed * 255)

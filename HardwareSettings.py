@@ -1,13 +1,21 @@
+from Constants import Constants
+
 class HardwareSettings:
     
     CAM_NUM = 1
 
     BUZZER_PIN = 12
+    BUZZER_FREQ = Constants.FREQ_BUZZER
 
     FAN_PIN = 13
+    FAN_FREQ = Constants.FREQ_MOTOR
 
     LIGHT_PIN = 5
 
+    MOTOR_DIR_PIN = 16
+    MOTOR_PWM_PIN = 17
+    MOTOR_PWM_FREQ = Constants.FREQ_MOTOR
+    
     FLOW_SENSOR_OVAL_GEAR_PIN = 23
     FLOW_SENSOR_PADDLE_BRASS_PIN = 17
     FLOW_SENSOR_PADDLE_PLASTIC_PIN = 23

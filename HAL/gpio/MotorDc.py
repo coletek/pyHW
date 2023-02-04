@@ -14,38 +14,39 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-import time
-import threading
-
 from logger_config import logger
 import GPIOController
 from Constants import Constants
 from Device import Device
 
-class Buzzer(Device):
+class MotorDc(Device):
 
-    pin = 0
-    freq = Constants.FREQ_BUZZER
-    
+    dir_pin = 0
+    pwm_pin = 0
+    pwm_freq = Constants.FREQ_MOTOR
+    direction = False
+    speed = 0
+
     def __init__(self):
         self.hw = GPIOController.GPIOController()
 
     def start(self):
         self.is_active = True
-        self.set()
-        self.timer = threading.Timer(1, self.stop)
-        self.timer.start()
+        self.set(False, 1.0)
         
     def stop(self):
-        time.sleep(0.1)
-        if self.hw.is_simulation:
-            logger.info("beep stopped")
-        else:
-            self.hw.gpio_pwm(self.pin, self.freq, 0.0 * 255)
+        self.set(False, 0.0)
         self.is_active = False
         
-    def set(self):
+    def set(self, direction, speed):
+        self.direction = direction
+        self.speed = speed
+
         if self.hw.is_simulation:
-            logger.info("beep started")
+            logger.info("direction=%d speed=%f" % (direction, speed))
         else:
-            self.hw.gpio_pwm(self.pin, self.freq, 0.5 * 255)
+            if direction:
+                self.hw.gpio_write(self.dir_pin, True)
+            else:
+                self.hw.gpio_write(self.dir_pin, False)
+            self.hw.gpio_pwm(self.pwm_pin, self.pwm_freq, self.speed * 255)

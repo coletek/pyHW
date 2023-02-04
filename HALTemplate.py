@@ -13,6 +13,7 @@ components = { "1-wire.MAX31850JATB": "My Thermocouple",
                "gpio.StepperMotor": "My Stepper Motor",
                "gpio.Interrupt": "My Interrupt (e.g. Switch, Touch, SW420)",
                "gpio.Light": "My Light",
+               "gpio.MotorDc": "My DC Motor",
                "gpio.YFB7": "My Brass Paddle Flow Sensor",
                "gpio.YFS201": "My Plastic Paddle Flow Sesnor",
                "i2c.DS1775R": "My i2c-based temp sensor",
@@ -42,12 +43,17 @@ for k, v in components.items():
 modules['cam.Cam'].num = HardwareSettings.CAM_NUM
 #modules['cam.AccessControl'] WIP
 modules['gpio.Buzzer'].pin = HardwareSettings.BUZZER_PIN
+modules['gpio.Buzzer'].freq = HardwareSettings.BUZZER_FREQ
 modules['gpio.CXMSeries'].pin = HardwareSettings.FLOW_SENSOR_OVAL_GEAR_PIN
 modules['gpio.FanDc'].pin = HardwareSettings.FAN_PIN
+modules['gpio.FanDc'].freq = HardwareSettings.FAN_FREQ
 #modules['gpio.HUB75'] WIP
 #modules['gpio.Stepper'] WIP
 #modules['gpio.Interrupt'].pin = ?? WIP
 modules['gpio.Light'].pin = HardwareSettings.LIGHT_PIN
+modules['gpio.MotorDc'].dir_pin = HardwareSettings.MOTOR_DIR_PIN
+modules['gpio.MotorDc'].pwm_pin = HardwareSettings.MOTOR_PWM_PIN
+modules['gpio.MotorDc'].pwm_freq = HardwareSettings.MOTOR_PWM_FREQ
 modules['gpio.YFB7'].pin = HardwareSettings.FLOW_SENSOR_PADDLE_BRASS_PIN
 modules['gpio.YFS201'].pin = HardwareSettings.FLOW_SENSOR_PADDLE_PLASTIC_PIN
 modules['i2c.DS1775R'].bus = HardwareSettings.TEMP_SENSOR_I2C_BUS
@@ -84,6 +90,6 @@ while 1:
     for k, v in modules.items():
         logger.info("is_active(%s): %d" % (k, v.is_active))
         
-    if modules['gpio.FanDc'].is_active and not modules['gpio.Buzzer'].is_active:
+    if (modules['gpio.FanDc'].is_active or modules['gpio.Light'].is_active) and not modules['gpio.Buzzer'].is_active:
         modules['gpio.Buzzer'].stop()
         modules['gpio.Light'].stop()
