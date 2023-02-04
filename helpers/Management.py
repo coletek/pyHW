@@ -22,7 +22,7 @@ class Management:
         if self.is_debug:
             print (output, flush = True)
 
-        cmd = 'dpkg --force-overwrite -i /mnt/boylan/boylan-uss-*.deb'
+        cmd = 'dpkg --force-overwrite -i /mnt/name/name-project-*.deb'
         output = subprocess.check_output(cmd, shell = True).decode('ascii')
         if self.is_debug:
             print (output, flush = True)
@@ -39,7 +39,7 @@ class Management:
         if self.is_debug:
             print (output, flush = True)
             
-        cmd = 'cp /var/log/boylan/* /mnt/boylan/'
+        cmd = 'cp /var/log/name/* /mnt/name/'
         output = subprocess.check_output(cmd, shell = True).decode('ascii')
         if self.is_debug:
             print (output, flush = True)
