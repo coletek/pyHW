@@ -27,13 +27,17 @@ except:
 
 class MCP3008(Device):
 
+    bus = 0
+    device = 0
+    bus_speed = 500000 # 500kHz
+    
     def start(self):
         self.is_active = True
         
         try:
             self.spi = SpiDev()
-            self.open(0, 1)
-            self.spi.max_speed_hz = 1000000 # 1MHz
+            self.open(self.bus, self.device)
+            self.spi.max_speed_hz = self.bus_speed
         except:
             logger.debug("no serial - assuming simulator")
             self.is_simulator = True

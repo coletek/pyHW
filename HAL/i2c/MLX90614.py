@@ -35,8 +35,9 @@ except:
 
 class MLX90614(Device):
 
-    bus_num = 1
-    address = 0x5a
+    bus = 1
+    
+    ADDRESS = 0x5a
     
     MLX90614_RAWIR1=0x04
     MLX90614_RAWIR2=0x05
@@ -63,7 +64,7 @@ class MLX90614(Device):
         self.is_active = True
         
         try:
-            self.bus = smbus.SMBus(bus=bus_num)
+            self.bus = smbus.SMBus(bus=self.bus)
         except:
             logger.debug('no SMBus - assuming simulator')
             self.is_simulator = True
@@ -74,7 +75,7 @@ class MLX90614(Device):
         
         for i in range(self.comm_retries):
             try:
-                return self.bus.read_word_data(self.address, reg_addr)
+                return self.bus.read_word_data(self.ADDRESS, reg_addr)
             except IOError as e:
                 #"Rate limiting" - sleeping to prevent problems with sensor 
                 #when requesting data too quickly

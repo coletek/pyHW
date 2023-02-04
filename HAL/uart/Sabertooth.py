@@ -26,22 +26,21 @@ import serial
 class Sabertooth(Device):
 
     address = 128
-    port = "/dev/ttyS0"
+    tty = "/dev/ttyS0"
     baudrate = 9600
-    uart_dev = ""
-
+    
     def start(self):
         self.is_active = True
         
         try:
-            self.uart_dev = serial.Serial(self.port, self.baudrate)
+            self.fd = serial.Serial(self.tty, self.baudrate)
         except:
             logger.debug("no serial - assuming simulator")
             self.is_simulator = True
 
         # auto set baud rate (for V1 only) - really really bad - http://webbot.org.uk/WebbotLibDocs2/44218.html
         #time.sleep(2)
-        #n = self.uart_dev.write(bytes(chr(170), 'UTF-8')) 
+        #n = self.fd.write(bytes(chr(170), 'UTF-8')) 
 
     def motor_control_left(self, speed): # speed: -127 to 127
         if speed >= 0:
@@ -75,13 +74,13 @@ class Sabertooth(Device):
         print ("send_motor_command (addr, cmd, speed, checksum): ", address, command, speed, checksum)
 
         # python2
-        #n = self.uart_dev.write(chr(address))
-        #n = self.uart_dev.write(chr(command))
-        #n = self.uart_dev.write(chr(speed))
-        #n = self.uart_dev.write(chr(checksum))
+        #n = self.fd.write(chr(address))
+        #n = self.fd.write(chr(command))
+        #n = self.fd.write(chr(speed))
+        #n = self.fd.write(chr(checksum))
         
         # python3
-        n = self.uart_dev.write(bytes(chr(address), 'UTF-8'))
-        n = self.uart_dev.write(bytes(chr(command), 'UTF-8'))
-        n = self.uart_dev.write(bytes(chr(speed), 'UTF-8'))
-        n = self.uart_dev.write(bytes(chr(checksum), 'UTF-8'))
+        n = self.fd.write(bytes(chr(address), 'UTF-8'))
+        n = self.fd.write(bytes(chr(command), 'UTF-8'))
+        n = self.fd.write(bytes(chr(speed), 'UTF-8'))
+        n = self.fd.write(bytes(chr(checksum), 'UTF-8'))

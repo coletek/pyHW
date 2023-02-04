@@ -31,12 +31,14 @@ except:
 
 class LTC2497(Device):
 
+    bus = 1
+
+    ADDRESS = 0x14
     VREF = 5.0
     MAX_READING = 8388608.0
     DELAY_AFTER_WRITE = 0.2
     DELAY_BETWEEN_READS = 0.2
     BYTE_BLOCK_SIZE = 0x06 # number of bytes to read in the block
-    ADDRESS = 0x14
 
     MAPPING = {
         0xB0: "BL_MOTOR_IS_A",
@@ -85,7 +87,7 @@ class LTC2497(Device):
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()
-            self.h = self.pi.i2c_open(1, self.ADDRESS)
+            self.h = self.pi.i2c_open(self.bus, self.ADDRESS)
         except:
             logger.debug('no RPi.GPIO - assuming simulator')
             self.is_simulator = True

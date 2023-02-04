@@ -28,6 +28,9 @@ except:
 
 class DR600(Device):
 
+    tty = '/dev/ttyS0'
+    baudrate = 115200
+    
     speed = 0
     timestamp = 0
     serial_data = []
@@ -56,7 +59,7 @@ class DR600(Device):
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()
-            self.fd = self.pi.serial_open('/dev/ttyS0', 115200, 0)
+            self.fd = self.pi.serial_open(self.tty, self.baudrate, 0)
         except:
             logger.debug("no pigpio - assuming simulator")
             self.is_simulator = True

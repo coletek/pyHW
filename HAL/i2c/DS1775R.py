@@ -27,15 +27,12 @@ except:
     pass
 
 class DS1775R(Device):
-
-    # dynamic variables
     
+    bus = 1
+
     temperature = 0.0
     
-    # static variables
-    
     ADDRESS = 0x48
-    
     REG_TEMP = 0x00
     
     def start(self):
@@ -44,7 +41,7 @@ class DS1775R(Device):
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()
-            self.fd = self.pi.i2c_open(1, self.ADDRESS)
+            self.fd = self.pi.i2c_open(self.bus, self.ADDRESS)
         except:
             logger.debug('no RPi.GPIO - assuming simulator')
             self.is_simulator = True

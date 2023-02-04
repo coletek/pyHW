@@ -28,6 +28,10 @@ except:
     
 class MAX7301ATL(Device):
 
+    bus = 0
+    device = 0
+    bus_speed = 500000 # 500kHz
+    
     is_simulator = False
     
     def start(self):
@@ -35,11 +39,11 @@ class MAX7301ATL(Device):
         
         try:
             self.spi = spidev.SpiDev()
-            self.spi.open(0, 0)
+            self.spi.open(self.bus, self.device)
         
             register = 0x04
             content = 0x01 # normal operation
-            self.spi.max_speed_hz = 1000000
+            self.spi.bus_speed_hz = self.bus_speed
             self.spi.xfer2([register, content])
         except:
            logger.debug("no serial - assuming simulator")

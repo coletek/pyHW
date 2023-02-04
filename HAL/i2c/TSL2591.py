@@ -28,7 +28,8 @@ except:
 class TSL2591(Device):
     
     # dynamic variables
-    
+
+    bus = 1
     lux = 0.0
     
     # static variables
@@ -69,7 +70,7 @@ class TSL2591(Device):
         try:
             pigpio.exceptions = True
             self.pi = pigpio.pi()
-            self.fd = self.pi.i2c_open(1, self.ADDRESS)
+            self.fd = self.pi.i2c_open(self.bus, self.ADDRESS)
         except:
             logger.debug('no pigpio - assuming simulator')
             self.is_simulator = True
