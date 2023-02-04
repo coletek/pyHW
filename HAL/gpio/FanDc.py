@@ -16,7 +16,7 @@
 
 from logger_config import logger
 import GPIOController
-import Constants
+from Constants import Constants
 from Device import Device
 
 class FanDc(Device):
@@ -41,4 +41,4 @@ class FanDc(Device):
         if self.hw.is_simulation:
             logger.info("speed=%f" % speed)
         else:
-            self.hw.gpio_pwm(self.pin, Constants.PWM_MOTOR, self.speed * 255)
+            self.hw.gpio_pwm(self.pin, Constants.FREQ_MOTOR, self.speed * 255)

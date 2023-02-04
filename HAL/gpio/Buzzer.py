@@ -19,7 +19,7 @@ import threading
 
 from logger_config import logger
 import GPIOController
-import Constants
+from Constants import Constants
 from Device import Device
 
 class Buzzer(Device):
@@ -40,11 +40,11 @@ class Buzzer(Device):
         if self.hw.is_simulation:
             logger.info("beep stopped")
         else:
-            self.hw.gpio_pwm(self.pin, Constants.PWM_BUZZER, 0.0 * 255)
+            self.hw.gpio_pwm(self.pin, Constants.FREQ_BUZZER, 0.0 * 255)
         self.is_active = False
         
     def set(self):
         if self.hw.is_simulation:
             logger.info("beep started")
         else:
-            self.hw.gpio_pwm(self.pin, Constants.PWM_BUZZER, 0.5 * 255)
+            self.hw.gpio_pwm(self.pin, Constants.FREQ_BUZZER, 0.5 * 255)

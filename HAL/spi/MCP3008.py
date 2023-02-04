@@ -16,7 +16,7 @@
 
 from logger_config import logger
 import GPIOController
-import Constants
+from Constants import Constants
 from Device import Device
 
 # TODO: move to GPIOController
