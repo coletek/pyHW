@@ -11,7 +11,8 @@ components = { "1-wire.MAX31850JATB": "My Thermocouple",
                "gpio.FanDc": "My DC Fan",
                "gpio.HUB75": "My RGB LED Matrix Display",
                "gpio.StepperMotor": "My Stepper Motor",
-               "gpio.Interrupt": "My Interrupt (e.g. SW420 or Touch)",
+               "gpio.Interrupt": "My Interrupt (e.g. Switch, Touch, SW420)",
+               "gpio.Light": "My Light",
                "gpio.YFB7": "My Brass Paddle Flow Sensor",
                "gpio.YFS201": "My Plastic Paddle Flow Sesnor",
                "i2c.DS1775R": "My i2c-based temp sensor",
@@ -46,6 +47,7 @@ modules['gpio.FanDc'].pin = HardwareSettings.FAN_PIN
 #modules['gpio.HUB75'] WIP
 #modules['gpio.Stepper'] WIP
 #modules['gpio.Interrupt'].pin = ?? WIP
+modules['gpio.Light'].pin = HardwareSettings.LIGHT_PIN
 modules['gpio.YFB7'].pin = HardwareSettings.FLOW_SENSOR_PADDLE_BRASS_PIN
 modules['gpio.YFS201'].pin = HardwareSettings.FLOW_SENSOR_PADDLE_PLASTIC_PIN
 modules['i2c.DS1775R'].bus = HardwareSettings.TEMP_SENSOR_I2C_BUS
@@ -84,3 +86,4 @@ while 1:
         
     if modules['gpio.FanDc'].is_active and not modules['gpio.Buzzer'].is_active:
         modules['gpio.Buzzer'].stop()
+        modules['gpio.Light'].stop()
