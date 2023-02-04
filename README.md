@@ -1,4 +1,4 @@
-# pyRPI
+# pyHW
 
 Python API's to hardware components, modules, and RPI-project based helpers.
 

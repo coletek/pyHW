@@ -1,4 +1,4 @@
-# pyRPI
+# pyHW
 # Copyright (C) 2017-2023 Luke Cole
 #
 # This program is free software: you can redistribute it and/or modify
